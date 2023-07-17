@@ -1,5 +1,10 @@
-#bpy==3.4.0
+bpy==3.4.0
 mathutils==3.3.0
+
+# external dependencies
+lib/blender_validator-1.0.2-py3-none-any.whl
+lib/gltf_formatter-1.0.2-py3-none-any.whl
+PyYAML==6.0
 
 # linters
 fake-bpy-module-3.4==20230117
@@ -22,3 +27,4 @@ requests==2.27.1
 toml==0.10.2
 urllib3==1.26.8
 zstandard==0.16.0
+

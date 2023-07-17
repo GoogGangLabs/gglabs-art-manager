@@ -1,4 +1,5 @@
 include .Makefile.venv
+include .env
 
 APP=kikitown_pipeline_manager
 BIN=./.venv/bin
@@ -15,17 +16,10 @@ else
 	OS := ""
 endif
 
-EXTERNAL_PKGS=et_xmlfile openpyxl
-DST_EXTERNAL_DIR=$(SRC)/external_lib
-SRC_EXTERNAL_PKGS := $(addprefix $(VENVDIR)/lib/python*/site-packages/,$(EXTERNAL_PKGS))
-
-.PHONY: $(DST_EXTERNAL_DIR)
-$(DST_EXTERNAL_DIR): $(SRC_EXTERNAL_PKGS)
-	mkdir -p $(DST_EXTERNAL_DIR)
-	cp -r $^ $@
-
 echo-blender:
 	$(BLENDER) --version
+	$(BLENDER) -b --python-expr "import sys;print(f'\n{sys.executable}\n')"
+
 
 .PHONY: lint
 lint:
@@ -40,7 +34,17 @@ test:
 	$(BIN)/pytest -vvv $(SRC)/test
 
 .PHONY: external-lib
-external-lib: $(DST_EXTERNAL_DIR)
+external-lib:
+	mkdir -p $(APP)/external_lib lib
+	pushd $(GLTF_FORMATTER_PATH) && make build && popd
+	cp $(GLTF_FORMATTER_PATH)/dist/*.whl $(APP)/external_lib/
+	cp $(GLTF_FORMATTER_PATH)/dist/*.whl lib/
+
+
+.PHONY: clean
+clean: clean-venv
+	pushd $(GLTF_FORMATTER_PATH) && make clean && popd
+	rm -rf lib $(APP)/external_lib
 
 .PHONY: build
 build: external-lib
@@ -48,5 +52,7 @@ build: external-lib
 	zip -vr build/$(APP)_$(OS).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
 	zip -vr build/sample.zip sample
 
-blender: venv
-	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py sample.blend
+dev: external-lib venv
+
+blender: dev
+	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py sample/sample.blend

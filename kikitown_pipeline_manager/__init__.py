@@ -1,11 +1,45 @@
 import os
+import subprocess
 import sys
+from importlib.util import find_spec
+from typing import List
+
+# Resolve external dependencies
+EXTERNAL_PACKAGES = ["pygltflib", "gltf_formatter", "blender_validator"]
 
 current = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(f"{current}/external_lib")
+EXTERNAL_LIB_DIR = f"{current}/external_lib"
+sys.path.append(EXTERNAL_LIB_DIR)
+
+
+def prepare_external_dependencies(packages: List[str]):
+    for pkg in EXTERNAL_PACKAGES:
+        py_exec = sys.executable
+        # subprocess.call([py_exec, "-m", "pip", "uninstall", "-y", pkg])
+
+    missing_pkgs = [pkg for pkg in packages if (pkg not in sys.modules) and (not find_spec(pkg))]
+
+    if len(missing_pkgs) > 0:
+        py_exec = sys.executable
+        subprocess.call([py_exec, "-m", "ensurepip", "--user"])
+        subprocess.call([py_exec, "-m", "pip", "install", "--upgrade", "pip"])
+
+        for pkg in missing_pkgs:
+            py_exec = sys.executable
+            subprocess.call([py_exec, "-m", "pip", "install", "--user", pkg])
+
+        for filename in os.listdir(EXTERNAL_LIB_DIR):
+            f = os.path.join(EXTERNAL_LIB_DIR, filename)
+            if os.path.isfile(f) and f.endswith(".whl"):
+                subprocess.call([py_exec, "-m", "pip", "install", "--upgrade", "--user", f])
+
+
+if "pytest" not in sys.modules:
+    prepare_external_dependencies(EXTERNAL_PACKAGES)
+
 
 # pylint: disable=wrong-import-position
-from kikitown_pipeline_manager import animating, exporter
+from kikitown_pipeline_manager import exporter, manager
 
 bl_info = {
     "name": "GGLabs_Kikitown_Exporter",
@@ -23,12 +57,12 @@ bl_info = {
 
 
 def register():
-    animating.register()
+    manager.register()
     exporter.register()
 
 
 def unregister():
-    animating.unregister()
+    manager.unregister()
     exporter.unregister()
 
 

@@ -2,8 +2,8 @@ bpy==3.4.0
 mathutils==3.3.0
 
 # external dependencies
-lib/blender_validator-1.0.2-py3-none-any.whl
-lib/gltf_formatter-1.0.2-py3-none-any.whl
+lib/blender_validator-1.0.2.1-py3-none-any.whl
+lib/gltf_formatter-1.0.2.1-py3-none-any.whl
 PyYAML==6.0
 
 # linters

@@ -37,14 +37,14 @@ test:
 external-lib:
 	mkdir -p $(APP)/external_lib lib
 	pushd $(GLTF_FORMATTER_PATH) && make build && popd
-	cp $(GLTF_FORMATTER_PATH)/dist/*.whl $(APP)/external_lib/
+	cp -r $(GLTF_FORMATTER_PATH)/build/lib/* $(APP)/external_lib/
 	cp $(GLTF_FORMATTER_PATH)/dist/*.whl lib/
 
 
 .PHONY: clean
-clean: clean-venv
+clean:
 	pushd $(GLTF_FORMATTER_PATH) && make clean && popd
-	rm -rf lib $(APP)/external_lib
+	rm -rf lib $(APP)/external_lib build
 
 .PHONY: build
 build: external-lib

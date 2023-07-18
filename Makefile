@@ -49,10 +49,10 @@ clean: clean-venv
 .PHONY: build
 build: external-lib
 	mkdir -p build
-	zip -vr build/$(APP)_$(OS).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
+	zip -vr build/$(APP).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
 	zip -vr build/sample.zip sample
 
 dev: external-lib venv
 
-blender: dev
+blender:
 	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py sample/sample.blend

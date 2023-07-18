@@ -95,3 +95,11 @@ class KPM_PGT_Main(KPM_PGT_Base):
         description="blender 파일 유효성 검사 메세지",
         default="",
     )
+
+    output_dirpath: bpy.props.StringProperty(
+        name="GLB 파일 생성 경로",
+        description="GLB 파일을 생성할 경로를 입력합니다.",
+        default="//",
+        maxlen=1024,
+        subtype="DIR_PATH",
+    )

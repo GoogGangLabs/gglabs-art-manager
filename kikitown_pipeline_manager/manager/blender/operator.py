@@ -1,9 +1,17 @@
+import os
+
 import bpy
 from blender_validator import BlenderValidator, ConfigLoader, TaskType
 from blender_validator.exception import BlenderValidateError
+from blender_validator.rules.shapekey import ShapeKeyArrangementRule
+from gltf_formatter import GltfFormatter, TargetResourceType
 
 from kikitown_pipeline_manager.manager.blender.property_group import KPM_PGT_Main
+from kikitown_pipeline_manager.manager.blender.utils import (
+    control_visibilities_for_tasktype,
+)
 from kikitown_pipeline_manager.manager.model import Project
+from kikitown_pipeline_manager.manager.rule import beergang_blender, beergang_gltf
 
 TASK_TYPE_MAP = {task.name: task for task in TaskType}
 
@@ -18,8 +26,22 @@ class KPM_OT_ValidateBlender(bpy.types.Operator):
         accessor = KPM_PGT_Main
         mode: str = accessor.getattr("task_type")
 
+        project: str = accessor.getattr("project_type")
+        if project == Project.BEERGANG.name:
+            custom_rules = beergang_blender
+            exclude_global_rules = [ShapeKeyArrangementRule]
+        else:
+            custom_rules = []
+            exclude_global_rules = []
+
         config: str = accessor.getattr_abspath("config_filepath")
-        validator = BlenderValidator(TASK_TYPE_MAP[mode], ConfigLoader.load(config))
+        validator = BlenderValidator(
+            TASK_TYPE_MAP[mode],
+            ConfigLoader.load(config),
+            custom_rules=custom_rules,
+            use_global_rules=True,
+            exclude_global_rules=exclude_global_rules,
+        )
 
         try:
             validator.validate_and_fix()
@@ -46,10 +68,72 @@ class KPM_OT_ExportGLB(bpy.types.Operator):
 
     def execute(self, context):
         accessor = KPM_PGT_Main
+        config: str = accessor.getattr_abspath("config_filepath")
+        constants = ConfigLoader.load(config)
+
+        # 1. visibility control
         mode: str = accessor.getattr("task_type")
 
-        if mode == TaskType.FACE_RIGGING.name:
-            accessor.setattr("blender_validated_message", "YES")
+        # TODO: Make this controlled by mode and project
+
+        control_visibilities_for_tasktype(mode, constants.shapekey_categories)
+
+        # 2. Filepath
+        output_path: str = accessor.getattr_abspath("output_dirpath")
+        current_filename: str = bpy.path.basename(bpy.context.blend_data.filepath).rsplit(".", 1)[0]
+        temp_filepath = os.path.join(output_path, f"temp_{current_filename}.glb")
+        glb_filepath = os.path.join(output_path, f"{current_filename}.glb")
+
+        # 8.2 Create an intermediate gltf file
+        bpy.ops.export_scene.gltf(
+            filepath=temp_filepath,
+            check_existing=False,
+            # export_format="GLTF_EMBEDDED",
+            export_format="GLB",
+            export_keep_originals=False,
+            # Include
+            # use_visible=True,
+            use_renderable=True,
+            use_active_scene=True,
+            export_extras=True,
+            # Transform
+            export_yup=True,
+            # Mesh
+            export_apply=False,
+            export_texcoords=True,
+            export_normals=True,
+            export_tangents=True,
+            export_colors=False,
+            export_attributes=True,
+            use_mesh_edges=False,
+            use_mesh_vertices=False,
+            export_original_specular=True,  # TODO: Should Check This
+            # Animation
+            export_animations=False,
+            # Shape keys
+            export_morph=True,
+            export_morph_normal=True,
+            export_morph_tangent=False,
+            # Skinning
+            export_skins=False,
+        )
+
+        # 3. Postprocess GLB
+        # 8.3 Patch the gltf file.
+        # 2.2 GLTF postprocessors
+        rule_formatter = GltfFormatter(
+            TargetResourceType.FACE,
+            custom_rules=beergang_gltf,
+            strict_mode=True,
+        )
+
+        rule_formatter.format_and_save(temp_filepath, glb_filepath)
+        os.remove(temp_filepath)
+
+        self.report(
+            {"INFO"},
+            f"Model file created :: {glb_filepath}",
+        )
 
         return {"FINISHED"}
 
@@ -72,5 +156,6 @@ class KPM_OT_Reset(bpy.types.Operator):
         accessor.setattr("config_loaded_message", "")
         accessor.setattr("is_blender_validated", False)
         accessor.setattr("blender_validated_message", "")
+        accessor.setattr("output_dirpath", "//")
 
         return {"FINISHED"}

@@ -109,12 +109,18 @@ class KPM_PT_Main(bpy.types.Panel):
             "config_filepath",
             "config_loaded_message",
         )
+        self.draw_filepath_row(
+            layout,
+            params,
+            "GLB 생성 경로",
+            "output_dirpath",
+        )
         layout.row().separator()
 
         layout.operator(
             KPM_OT_ValidateBlender.bl_idname,
             icon="TRACKING_FORWARDS",
-            text="Blender 파일 유효성 검사 및 자동보정하기",
+            text="Blender 파일 유효성 검사 및 보정하기",
         )
 
         _add_multiline_label(context, getattr(params, "blender_validated_message"), layout)

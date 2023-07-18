@@ -30,7 +30,7 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 #
-disable=missing-function-docstring,missing-docstring,invalid-name,too-many-locals,too-many-statements,pointless-string-statement,too-many-arguments,assignment-from-no-return,unused-argument,too-many-branches,no-else-continue,too-many-nested-blocks,too-few-public-methods
+disable=missing-function-docstring,missing-docstring,invalid-name,too-many-locals,too-many-statements,pointless-string-statement,too-many-arguments,assignment-from-no-return,unused-argument,too-many-branches,no-else-continue,too-many-nested-blocks,too-few-public-methods,fixme
 
 [FORMAT]
 

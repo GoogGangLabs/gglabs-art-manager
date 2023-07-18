@@ -1,5 +1,5 @@
 # only for pkgs
-nft_generator/external_lib
+kikitown_pipeline_manager/external_lib
 
 # Temp files
 **/*.swp

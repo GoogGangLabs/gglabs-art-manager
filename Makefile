@@ -16,6 +16,16 @@ else
 	OS := ""
 endif
 
+EXTERNAL_PKGS=blender_validator gltf_formatter dataclasses_json deprecated extensions marshmallow mypy_extensions.py packaging pygltflib typing_extensions.py typing_inspect.py wrapt
+
+DST_EXTERNAL_DIR=$(SRC)/external_lib
+SRC_EXTERNAL_PKGS := $(addprefix $(VENVDIR)/lib/python*/site-packages/,$(EXTERNAL_PKGS))
+
+.PHONY: $(DST_EXTERNAL_DIR)
+$(DST_EXTERNAL_DIR): $(SRC_EXTERNAL_PKGS)
+	mkdir -p $(DST_EXTERNAL_DIR)
+	cp -r $^ $@
+
 echo-blender:
 	$(BLENDER) --version
 	$(BLENDER) -b --python-expr "import sys;print(f'\n{sys.executable}\n')"
@@ -33,18 +43,17 @@ format:
 test:
 	$(BIN)/pytest -vvv $(SRC)/test
 
-.PHONY: external-lib
-external-lib:
-	mkdir -p $(APP)/external_lib lib
+.PHONY: copy-lib
+copy-lib:
+	mkdir -p lib
 	pushd $(GLTF_FORMATTER_PATH) && make build && popd
-	cp -r $(GLTF_FORMATTER_PATH)/build/lib/* $(APP)/external_lib/
 	cp $(GLTF_FORMATTER_PATH)/dist/*.whl lib/
 
+.PHONY: dev
+dev: copy-lib venv
 
-.PHONY: clean
-clean:
-	pushd $(GLTF_FORMATTER_PATH) && make clean && popd
-	rm -rf lib $(APP)/external_lib build
+.PHONY: external-lib
+external-lib: $(DST_EXTERNAL_DIR)
 
 .PHONY: build
 build: external-lib
@@ -52,7 +61,10 @@ build: external-lib
 	zip -vr build/$(APP).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
 	zip -vr build/sample.zip sample
 
-dev: external-lib venv
+.PHONY: clean
+clean:
+	pushd $(GLTF_FORMATTER_PATH) && make clean && popd
+	rm -rf lib $(APP)/external_lib build
 
-blender:
+blender: external-lib
 	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py sample/sample.blend

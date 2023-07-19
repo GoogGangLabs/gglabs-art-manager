@@ -1,6 +1,9 @@
 # only for pkgs
 kikitown_pipeline_manager/external_lib
 
+# Blend files
+**/*.blend
+
 # Temp files
 **/*.swp
 **/.DS_Store

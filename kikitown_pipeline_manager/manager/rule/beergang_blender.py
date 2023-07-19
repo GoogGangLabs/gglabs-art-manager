@@ -15,7 +15,8 @@ class BeergangShapeKeyArrangementRule(Rule):
         return True
 
     @classmethod
-    def fix(cls, constants: RuleConstants):
+    def fix(cls, constants: RuleConstants) -> str:
+        report_lines = []
         norm_categories = [norm_str(c) for c in constants.shapekey_categories]
 
         # 0. Get target mesh
@@ -29,7 +30,19 @@ class BeergangShapeKeyArrangementRule(Rule):
                 ]
 
                 for mesh in meshes:
-                    arrange_shapekeys(mesh, constants.shapekeys)
+                    sk_report_lines = [
+                        f"Shapekey[{d.key}] {d.detail}"
+                        for details in arrange_shapekeys(mesh, constants.shapekeys).values()
+                        for d in details
+                    ]
+                    if len(sk_report_lines) > 0:
+                        report_lines.append(
+                            f"!! Shapekey Fixed [{col.name}] {mesh.name} ({mesh.data.name}) !!"
+                        )
+                        report_lines.extend(sk_report_lines)
+                        report_lines.append("")
+
+        return "\n".join(report_lines)
 
 
 class BeergangBodyWithShapeKeyedMeshRule(Rule):

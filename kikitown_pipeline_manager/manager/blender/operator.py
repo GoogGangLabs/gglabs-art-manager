@@ -52,12 +52,13 @@ class KPM_OT_ValidateBlender(bpy.types.Operator):
         )
 
         try:
-            validator.validate_and_fix()
+            fix_report = validator.validate_and_fix()
         except BlenderValidateError as e:
             message = f"⚠️ {str(e)}"
             accessor.setattr("is_blender_validated", False)
         else:
             message = "✅ Blender 파일이 유효성 검사를 마쳤습니다. 이제 GLB를 생성해도 좋습니다!"
+            message = f"{fix_report}\n\n{message}"
             accessor.setattr("is_blender_validated", True)
 
         accessor.setattr("blender_validated_message", message)

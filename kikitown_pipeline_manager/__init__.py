@@ -14,8 +14,6 @@ EXTERNAL_LIB_DIR = f"{current}/external_lib"
 sys.path.append(EXTERNAL_LIB_DIR)
 
 
-# 1.2.3.4
-# True when new > current
 def is_new_version_is_newer(current_version: str, new_version: str) -> bool:
     ret = False
     current_ts = [int(v) for v in current_version.split(".")]
@@ -77,8 +75,10 @@ def upgrade_whl_packages(packages: List[str], force=False):
 
 
 if "pytest" not in sys.modules:
-    prepare_external_dependencies(EXTERNAL_PACKAGES)
-    upgrade_whl_packages(WHL_PACKAGES)
+    # This doesn't work at random in Windows.
+    # prepare_external_dependencies(EXTERNAL_PACKAGES)
+    # upgrade_whl_packages(WHL_PACKAGES)
+    pass
 
 
 # pylint: disable=wrong-import-position

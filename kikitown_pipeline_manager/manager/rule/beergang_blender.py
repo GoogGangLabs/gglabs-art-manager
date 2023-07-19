@@ -16,9 +16,12 @@ class BeergangShapeKeyArrangementRule(Rule):
 
     @classmethod
     def fix(cls, constants: RuleConstants):
+        norm_categories = [norm_str(c) for c in constants.shapekey_categories]
+
         # 0. Get target mesh
         for col in bpy.context.scene.collection.children:
-            if col.name in constants.shapekey_categories:
+            norm_col = norm_str(col.name)
+            if norm_col in norm_categories:
                 meshes = [
                     obj
                     for obj in col.all_objects

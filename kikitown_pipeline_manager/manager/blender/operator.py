@@ -35,9 +35,17 @@ class KPM_OT_ValidateBlender(bpy.types.Operator):
             exclude_global_rules = []
 
         config: str = accessor.getattr_abspath("config_filepath")
+        try:
+            config_loader = ConfigLoader.load(config)
+        except (ValueError, FileNotFoundError):
+            message = "유효성 검사 설정 파일을 다시 확인해주세요."
+            accessor.setattr("is_blender_validated", False)
+            accessor.setattr("blender_validated_message", message)
+            return {"FINISHED"}
+
         validator = BlenderValidator(
             TASK_TYPE_MAP[mode],
-            ConfigLoader.load(config),
+            config_loader,
             custom_rules=custom_rules,
             use_global_rules=True,
             exclude_global_rules=exclude_global_rules,

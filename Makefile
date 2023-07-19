@@ -21,10 +21,13 @@ EXTERNAL_PKGS=blender_validator gltf_formatter dataclasses_json deprecated exten
 DST_EXTERNAL_DIR=$(SRC)/external_lib
 SRC_EXTERNAL_PKGS := $(addprefix $(VENVDIR)/lib/python*/site-packages/,$(EXTERNAL_PKGS))
 
+SAMPLE?=sample/sample.blend
+
 .PHONY: $(DST_EXTERNAL_DIR)
 $(DST_EXTERNAL_DIR): $(SRC_EXTERNAL_PKGS)
 	mkdir -p $(DST_EXTERNAL_DIR)
 	cp -r $^ $@
+
 
 echo-blender:
 	$(BLENDER) --version
@@ -49,8 +52,12 @@ copy-lib:
 	pushd $(GLTF_FORMATTER_PATH) && make build && popd
 	cp $(GLTF_FORMATTER_PATH)/dist/*.whl lib/
 
+.PHONY: install-lib
+install-lib: copy-lib
+	$(BIN)/python -mpip install --force-reinstall lib/*.whl
+
 .PHONY: dev
-dev: copy-lib venv
+dev: copy-lib venv install-lib
 
 .PHONY: external-lib
 external-lib: $(DST_EXTERNAL_DIR)
@@ -67,4 +74,4 @@ clean:
 	rm -rf lib $(APP)/external_lib build
 
 blender: external-lib
-	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py sample/sample.blend
+	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py $(SAMPLE)

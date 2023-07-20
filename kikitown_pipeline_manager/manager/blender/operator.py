@@ -3,7 +3,6 @@ import os
 import bpy
 from blender_validator import BlenderValidator, ConfigLoader, TaskType
 from blender_validator.exception import BlenderValidateError
-from blender_validator.rules.shapekey import ShapeKeyArrangementRule
 from gltf_formatter import GltfFormatter, TargetResourceType
 
 from kikitown_pipeline_manager.manager.blender.property_group import KPM_PGT_Main
@@ -11,7 +10,6 @@ from kikitown_pipeline_manager.manager.blender.utils import (
     control_visibilities_for_tasktype,
 )
 from kikitown_pipeline_manager.manager.model import Project
-from kikitown_pipeline_manager.manager.rule import beergang_blender, beergang_gltf
 
 TASK_TYPE_MAP = {task.name: task for task in TaskType}
 
@@ -28,8 +26,8 @@ class KPM_OT_ValidateBlender(bpy.types.Operator):
 
         project: str = accessor.getattr("project_type")
         if project == Project.BEERGANG.name:
-            custom_rules = beergang_blender
-            exclude_global_rules = [ShapeKeyArrangementRule]
+            custom_rules = []
+            exclude_global_rules = []
         else:
             custom_rules = []
             exclude_global_rules = []

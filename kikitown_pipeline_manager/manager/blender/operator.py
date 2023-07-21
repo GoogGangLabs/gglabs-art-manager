@@ -130,7 +130,6 @@ class KPM_OT_ExportGLB(bpy.types.Operator):
         # 2.2 GLTF postprocessors
         rule_formatter = GltfFormatter(
             TargetResourceType.FACE,
-            custom_rules=beergang_gltf,
             strict_mode=True,
         )
 

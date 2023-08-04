@@ -1,2 +1,0 @@
-class BlenderValidateError(ValueError):
-    pass

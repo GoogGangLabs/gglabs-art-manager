@@ -1,5 +1,5 @@
 # only for pkgs
-kikitown_pipeline_manager/external_lib
+gglabs_art_manager/external_lib
 
 # Blend files
 **/*.blend

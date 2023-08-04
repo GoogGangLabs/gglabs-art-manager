@@ -66,7 +66,6 @@ external-lib: $(DST_EXTERNAL_DIR)
 build: external-lib
 	mkdir -p build
 	zip -vr build/$(APP).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
-	zip -vr build/sample.zip sample
 
 .PHONY: clean
 clean:

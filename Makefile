@@ -1,7 +1,7 @@
 include .Makefile.venv
 include .env
 
-APP=kikitown_pipeline_manager
+APP=gglabs_art_manager
 BIN=./.venv/bin
 SRC=./$(APP)
 

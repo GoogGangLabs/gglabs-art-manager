@@ -9,6 +9,10 @@ from gglabs_art_manager.blender.property_group import GAM_PGT_Base
 class GAM_PGT_TaskControlView(GAM_PGT_Base):
     control_enabled: bpy.types.BoolProperty
 
+    @classmethod
+    def reset(cls):
+        return
+
 
 class TaskControlView(ABC):
     flag_property_key = "control_enabled"
@@ -19,6 +23,10 @@ class TaskControlView(ABC):
     @classmethod
     def getprops(cls):
         return cls.property_group_class.getprops()
+
+    @classmethod
+    def reset(cls):
+        return cls.property_group_class.reset()
 
     @classmethod
     def draw(cls, layout: bpy.types.UILayout):

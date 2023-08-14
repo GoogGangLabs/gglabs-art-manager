@@ -29,6 +29,12 @@ class GAM_PGT_ShapekeyControlPanel(GAM_PGT_TaskControlView):
         default="",
     )
 
+    @classmethod
+    def reset(cls):
+        cls.setattr("control_enabled", False)
+        cls.setattr("shapekey_name_prefix", "")
+        cls.setattr("result_message", "")
+
 
 class GAM_OT_RenameShapekey(bpy.types.Operator):
     bl_idname = "gglabs_art_manager.rename_shapekey"

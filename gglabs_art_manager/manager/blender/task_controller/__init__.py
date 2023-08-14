@@ -21,4 +21,16 @@ TaskTypeToViewControllers: Dict[Union[TaskType, str], List[TaskControlView]] = {
     **{k.name: v for k, v in _TaskTypeToViewControllers.items()},
 }
 
-__all__ = ["TaskTypeToViewControllers"]
+
+def reset_task_controllers():
+    controllers = {
+        control_view.__str__: control_view
+        for control_views in _TaskTypeToViewControllers.values()
+        for control_view in control_views
+    }.values()
+
+    for cv in controllers:
+        cv.reset()
+
+
+__all__ = ["TaskTypeToViewControllers", "reset_task_controllers"]

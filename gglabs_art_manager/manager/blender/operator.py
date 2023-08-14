@@ -9,6 +9,7 @@ from gltf_formatter import GltfFormatter
 from gltf_formatter.exception import RuleApplyError
 
 from gglabs_art_manager.manager.blender.property_group import GAM_PGT_Main
+from gglabs_art_manager.manager.blender.task_controller import reset_task_controllers
 from gglabs_art_manager.manager.blender.utils import control_visibilities_for_tasktype
 from gglabs_art_manager.manager.logger import logger
 from gglabs_art_manager.manager.model import (
@@ -160,5 +161,7 @@ class GAM_OT_Reset(bpy.types.Operator):
         accessor.setattr("blender_validated_message", "")
         accessor.setattr("output_dirpath", "//")
         accessor.setattr("glb_type", "glb")
+
+        reset_task_controllers()
 
         return {"FINISHED"}

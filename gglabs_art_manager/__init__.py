@@ -71,7 +71,9 @@ def upgrade_whl_packages(packages: List[str], force=False):
         for filename in os.listdir(EXTERNAL_LIB_DIR):
             f = os.path.join(EXTERNAL_LIB_DIR, filename)
             if os.path.isfile(f) and f.endswith(".whl"):
-                subprocess.call([py_exec, "-m", "pip", "install", "--upgrade", "--user", f])
+                subprocess.call(
+                    [py_exec, "-m", "pip", "install", "--upgrade", "--user", f]
+                )
 
 
 if "pytest" not in sys.modules:

@@ -3,10 +3,11 @@ import os
 import bpy
 from blender_validator import BlenderValidator, ConfigLoader, TaskType
 from blender_validator.exception import BlenderValidateError
+from blender_validator.rules.collection import WriteObjectCustomPropertiesRule
+from blender_validator.utils import load_bpy_context, save_bpy_context
 from gltf_formatter import GltfFormatter
 from gltf_formatter.exception import RuleApplyError
 
-from gglabs_art_manager.blender.utils import load_bpy_context, save_bpy_context
 from gglabs_art_manager.manager.blender.property_group import GAM_PGT_Main
 from gglabs_art_manager.manager.blender.utils import control_visibilities_for_tasktype
 from gglabs_art_manager.manager.logger import logger
@@ -28,7 +29,7 @@ class GAM_OT_ValidateBlender(bpy.types.Operator):
     def execute(self, context):
         accessor = GAM_PGT_Main
 
-        project: str = accessor.getattr("project_type")
+        # project: str = accessor.getattr("project_type")
         mode: str = accessor.getattr("task_type")
 
         config: str = accessor.getattr_abspath("validate_config_filepath")
@@ -82,33 +83,54 @@ class GAM_OT_ExportGLB(bpy.types.Operator):
         task_type: str = accessor.getattr("task_type")
 
         # TODO: Make this controlled by mode and project
-        # context = save_bpy_context()
+        context = save_bpy_context()
         control_visibilities_for_tasktype(task_type, constants.shapekey_categories)
-        # load_bpy_context(context)
 
-        # 2. Filepath
+        # 2. Generate custom properties for gltf formatting rules.
+        validator = BlenderValidator(
+            TaskType.ANY,
+            constants,
+            use_default_rules=False,
+            custom_rules=[WriteObjectCustomPropertiesRule],
+            logger=logger,
+        )
+        try:
+            validator.validate_and_fix()
+        except BlenderValidateError as e:
+            logger.log(str(e))
+
+        # 3. Filepath
+        glb_type: str = accessor.getattr("glb_type")
+
         output_path: str = accessor.getattr_abspath("output_dirpath")
-        current_filename: str = bpy.path.basename(bpy.context.blend_data.filepath).rsplit(".", 1)[0]
-        temp_filepath = os.path.join(output_path, f"temp_{current_filename}.glb")
-        glb_filepath = os.path.join(output_path, f"{current_filename}.glb")
+        current_filename: str = bpy.path.basename(
+            bpy.context.blend_data.filepath
+        ).rsplit(".", 1)[0]
+        temp_filepath = os.path.join(output_path, f"temp_{current_filename}.{glb_type}")
+        glb_filepath = os.path.join(output_path, f"{current_filename}.{glb_type}")
 
-        # 3. Create an intermediate gltf file
+        # 4. Create an intermediate gltf file
+        export_format = "GLB" if glb_type == "glb" else "GLTF_EMBEDDED"
         bpy.ops.export_scene.gltf(
-            filepath=temp_filepath, export_format="GLB", **TaskTypeGltfOptions[task_type]
+            filepath=temp_filepath,
+            export_format=export_format,
+            export_nla_strips_merged_animation_name="animation",
+            **TaskTypeGltfOptions[task_type],
         )
 
-        # 4. Postprocess GLB
+        # 5. Postprocess GLB
         rule_formatter = GltfFormatter(
-            TaskTypeToTargetResourceType[task_type],
-            strict_mode=True,
+            TaskTypeToTargetResourceType[task_type], strict_mode=True, logger=logger
         )
         try:
             rule_formatter.format_and_save(temp_filepath, glb_filepath)
         except RuleApplyError as e:
             logger.log(e)
-            return {"CANCELLED"}
+            raise
 
-        # os.remove(temp_filepath)
+        # 9. Clean up
+        os.remove(temp_filepath)
+        load_bpy_context(context)
 
         self.report(
             {"INFO"},
@@ -137,5 +159,6 @@ class GAM_OT_Reset(bpy.types.Operator):
         accessor.setattr("is_blender_validated", False)
         accessor.setattr("blender_validated_message", "")
         accessor.setattr("output_dirpath", "//")
+        accessor.setattr("glb_type", "glb")
 
         return {"FINISHED"}

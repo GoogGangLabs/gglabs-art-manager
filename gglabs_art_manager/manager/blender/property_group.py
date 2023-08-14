@@ -63,15 +63,31 @@ class GAM_PGT_Main(GAM_PGT_Base):
                 TaskType.FACE_MODELING.value,
                 TaskType.FACE_MODELING.value,
             ),
-            (TaskType.FACE_RIGGING.name, TaskType.FACE_RIGGING.value, TaskType.FACE_RIGGING.value),
+            (
+                TaskType.FACE_RIGGING.name,
+                TaskType.FACE_RIGGING.value,
+                TaskType.FACE_RIGGING.value,
+            ),
             (
                 TaskType.BODY_MODELING.name,
                 TaskType.BODY_MODELING.value,
                 TaskType.BODY_MODELING.value,
             ),
-            (TaskType.BODY_RIGGING.name, TaskType.BODY_RIGGING.value, TaskType.BODY_RIGGING.value),
-            (TaskType.ANIMATING.name, TaskType.ANIMATING.value, TaskType.ANIMATING.value),
-            (TaskType.MASTERING.name, TaskType.MASTERING.value, TaskType.MASTERING.value),
+            (
+                TaskType.BODY_RIGGING.name,
+                TaskType.BODY_RIGGING.value,
+                TaskType.BODY_RIGGING.value,
+            ),
+            (
+                TaskType.ANIMATING.name,
+                TaskType.ANIMATING.value,
+                TaskType.ANIMATING.value,
+            ),
+            (
+                TaskType.MASTERING.name,
+                TaskType.MASTERING.value,
+                TaskType.MASTERING.value,
+            ),
         ],
         default=TaskType.FACE_RIGGING.name,
     )
@@ -114,4 +130,11 @@ class GAM_PGT_Main(GAM_PGT_Base):
         default="//",
         maxlen=1024,
         subtype="DIR_PATH",
+    )
+
+    glb_type: bpy.props.EnumProperty(
+        name="",
+        description="GLB/GLTF 파일 포맷",
+        items=[("glb", "GLB", "GLB"), ("gltf", "GLTF", "GLTF_EMBEDDED")],
+        default="glb",
     )

@@ -100,10 +100,9 @@ _TaskTypeGltfOptions = {
         export_animations=True,
         export_animation_mode="ACTIVE_ACTIONS",
         export_current_frame=False,
-        export_frame_range=True,
+        export_frame_range=False,
         export_frame_step=1,
         export_force_sampling=True,
-        export_nla_strips=True,
         export_optimize_animation_size=False,
         export_reset_pose_bones=True,
         # Shape keys
@@ -111,7 +110,7 @@ _TaskTypeGltfOptions = {
         export_morph_normal=True,
         export_morph_tangent=False,
         # Skinning
-        export_skins=False,
+        export_skins=True,
         export_all_influences=False,
         export_def_bones=False,
     ),

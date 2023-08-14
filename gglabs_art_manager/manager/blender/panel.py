@@ -8,6 +8,7 @@ from gglabs_art_manager.manager.blender.operator import (
     GAM_OT_ValidateBlender,
 )
 from gglabs_art_manager.manager.blender.property_group import GAM_PGT_Main
+from gglabs_art_manager.manager.blender.task_controller import TaskTypeToViewControllers
 
 
 class GAM_PT_Main(bpy.types.Panel):
@@ -54,20 +55,27 @@ class GAM_PT_Main(bpy.types.Panel):
             text="입력 데이터 초기화",
         )
 
+        # 1. Basic Configurations
         layout.row()
-        self.draw_filepath_row(layout, params, "작업 프로젝트", "project_type", icon_only=False)
-        self.draw_filepath_row(layout, params, "작업 단계", "task_type", icon_only=False)
-
-        layout.row().separator()
-
-        box = layout.box()
         self.draw_filepath_row(
-            box,
+            layout, params, "작업 프로젝트", "project_type", icon_only=False
+        )
+        self.draw_filepath_row(layout, params, "작업 단계", "task_type", icon_only=False)
+        self.draw_filepath_row(
+            layout,
             params,
-            "유효성 검사 설정 파일",
+            "설정 파일",
             "validate_config_filepath",
             "validate_config_loaded_message",
         )
+
+        # 2. Additional Tools For the specific Task Type
+        task_type: str = getattr(params, "task_type")
+        for task_control_view in TaskTypeToViewControllers[task_type]:
+            task_control_view.draw(layout.box())
+
+        # 3. Blender Validator
+        box = layout.box()
         box.operator(
             GAM_OT_ValidateBlender.bl_idname,
             icon="TRACKING_FORWARDS",
@@ -75,18 +83,22 @@ class GAM_PT_Main(bpy.types.Panel):
         )
         validate_message: str = getattr(params, "blender_validated_message")
         for line in validate_message.split("\n"):
-            box.label(text=line.rstrip())
+            if line.rstrip():
+                box.label(text=line.rstrip())
         layout.row().separator()
 
+        # 4. Render Options
+        box = layout.box()
         self.draw_filepath_row(
-            layout,
+            box,
             params,
             "GLB 생성 경로",
             "output_dirpath",
         )
+        self.draw_filepath_row(box, params, "GLB 파일 포맷", "glb_type", icon_only=False)
         layout.row().separator()
 
-        is_ready: bool = getattr(params, "is_blender_validated")
+        is_ready: bool = getattr(params, "is_validate_config_loaded")
         if is_ready:
             layout.row().separator()
             layout.operator(
@@ -94,5 +106,7 @@ class GAM_PT_Main(bpy.types.Panel):
                 icon="RENDER_STILL",
                 text="GLB 생성하기",
             )
+        else:
+            layout.label(text="GLB를 생성하기 위해서는 먼저 설정 파일이 정상적으로 로드되어야 합니다!")
 
         layout.row()

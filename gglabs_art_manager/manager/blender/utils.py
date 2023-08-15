@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 
 import bpy
 from blender_validator import TaskType
@@ -6,45 +6,16 @@ from blender_validator.utils import (
     is_armature_collection,
     is_common_collection,
     is_main_collection,
+    is_same_strkey,
     main_collection,
     set_visibility_of_collection,
     set_visibility_of_object,
+    strkey,
 )
 
 
-def construct_category_to_colname() -> Dict[str, str]:
-    categories = [
-        c.name for c in main_collection().children if c.name.lower() != "common"
-    ]
-    return {c.lower(): c for c in categories}
-
-
-def construct_pid_to_colname() -> Dict[str, str]:
-    pids = [
-        pid_col.name
-        for category_col in bpy.context.scene.collection.children
-        if category_col.name.lower() != "common"
-        for pid_col in category_col.children
-    ]
-    return {p.lower(): p for p in pids}
-
-
-def construct_nstring_to_collection() -> Dict[str, bpy.types.Collection]:
-    return {
-        **{
-            category_col.name.lower(): category_col
-            for category_col in main_collection().children
-        },
-        **{
-            parts_col.name.lower(): parts_col
-            for category_col in main_collection().children
-            for parts_col in category_col.children
-        },
-    }
-
-
 def control_visibilities_for_tasktype(task_type: str, shapekey_categories: List[str]):
-    shapekey_categories_norm = [category.lower() for category in shapekey_categories]
+    shapekey_category_strkeys = [strkey(category) for category in shapekey_categories]
 
     # 0. Turn off rendering options for the objects directly dangled to the scene collection.
     for obj in bpy.context.scene.collection.objects:
@@ -77,14 +48,14 @@ def control_visibilities_for_tasktype(task_type: str, shapekey_categories: List[
                         )
 
             # Show Shapekey Meshes
-            elif collection.name.lower() in shapekey_categories_norm:
+            elif strkey(collection) in shapekey_category_strkeys:
                 set_visibility_of_collection(
                     collection, True, with_layer_collection=True
                 )
 
-                if collection.name.lower() == "type":
+                if is_same_strkey(collection, "type"):
                     for obj in list(collection.all_objects):
-                        if obj.type == "MESH" and obj.name.lower().startswith("body_"):
+                        if obj.type == "MESH" and strkey(obj).startswith("body_"):
                             set_visibility_of_object(obj, False)
 
             else:
@@ -98,14 +69,14 @@ def control_visibilities_for_tasktype(task_type: str, shapekey_categories: List[
             if is_common_collection(collection):
                 pass
 
-            elif collection.name.lower() in shapekey_categories_norm:
+            elif strkey(collection) in shapekey_category_strkeys:
                 set_visibility_of_collection(
                     collection, True, with_layer_collection=True
                 )
 
-                if collection.name.lower() == "type":
+                if is_same_strkey(collection, "type"):
                     for obj in list(collection.all_objects):
-                        if obj.type == "MESH" and obj.name.lower().startswith("body_"):
+                        if obj.type == "MESH" and strkey(obj).startswith("body_"):
                             obj.hide_render = True
             else:
                 set_visibility_of_collection(

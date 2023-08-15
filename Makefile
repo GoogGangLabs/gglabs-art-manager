@@ -16,7 +16,7 @@ else
 	OS := ""
 endif
 
-EXTERNAL_PKGS=blender_validator gltf_formatter dataclasses_json deprecated extensions marshmallow mypy_extensions.py packaging pygltflib typing_extensions.py typing_inspect.py wrapt
+EXTERNAL_PKGS=blender_validator gltf_formatter dataclasses_json deprecated marshmallow mypy_extensions.py packaging pygltflib typing_extensions.py typing_inspect.py wrapt
 
 DST_EXTERNAL_DIR=$(SRC)/external_lib
 SRC_EXTERNAL_PKGS := $(addprefix $(VENVDIR)/lib/python*/site-packages/,$(EXTERNAL_PKGS))

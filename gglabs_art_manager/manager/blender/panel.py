@@ -9,10 +9,11 @@ from gglabs_art_manager.manager.blender.operator import (
 )
 from gglabs_art_manager.manager.blender.property_group import GAM_PGT_Main
 from gglabs_art_manager.manager.blender.task_controller import TaskTypeToViewControllers
+from gglabs_art_manager.version import __version__
 
 
 class GAM_PT_Main(bpy.types.Panel):
-    bl_label = "GGLabs Art Manager"
+    bl_label = f"GGLabs Art Manager (v{__version__})"
     bl_idname = "GAM_PT_Main"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

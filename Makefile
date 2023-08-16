@@ -65,7 +65,9 @@ external-lib: $(DST_EXTERNAL_DIR)
 .PHONY: build
 build: external-lib
 	mkdir -p build
+	echo "__version__ = \"$$(date '+%Y%m%d')\"" > $(APP)/version.py
 	zip -vr build/$(APP).zip $(APP) -x "*.DS_Store" -x "*.pyc" -x "*__pycache__*"
+	cp build/$(APP).zip build/$(APP)_$$(date '+%Y%m%d').zip
 
 .PHONY: clean
 clean:

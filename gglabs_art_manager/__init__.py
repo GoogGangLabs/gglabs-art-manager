@@ -11,7 +11,7 @@ WHL_PACKAGES = ["gltf_formatter", "blender_validator"]
 
 current = os.path.dirname(os.path.realpath(__file__))
 EXTERNAL_LIB_DIR = f"{current}/external_lib"
-sys.path.append(EXTERNAL_LIB_DIR)
+sys.path.insert(0, EXTERNAL_LIB_DIR)
 
 
 def is_new_version_is_newer(current_version: str, new_version: str) -> bool:

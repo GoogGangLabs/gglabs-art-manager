@@ -111,6 +111,64 @@ shapekeys:
   - brow_middle03Down_R
   - brow_endDown_L
   - brow_endDown_R
+shapekeys_mouth:
+  - jawForward
+  - jawLeft
+  - jawOpen
+  - jawRight
+  - mouthClose
+  - mouthDimpleLeft
+  - mouthDimpleRight
+  - mouthFrownLeft
+  - mouthFrownRight
+  - mouthFunnel
+  - mouthLeft
+  - mouthLowerDownLeft
+  - mouthLowerDownRight
+  - mouthPressLeft
+  - mouthPressRight
+  - mouthPucker
+  - mouthRight
+  - mouthRollLower
+  - mouthRollUpper
+  - mouthShrugLower
+  - mouthShrugUpper
+  - mouthSmileLeft
+  - mouthSmileRight
+  - mouthStretchLeft
+  - mouthStretchRight
+  - mouthUpperUpLeft
+  - mouthUpperUpRight
+  - noseSneerLeft
+  - noseSneerRight
+  - tongueOut
+  - viseme_sil
+  - viseme_PP
+  - viseme_FF
+  - viseme_TH
+  - viseme_DD
+  - viseme_kk
+  - viseme_CH
+  - viseme_SS
+  - viseme_nn
+  - viseme_RR
+  - viseme_aa
+  - viseme_E
+  - viseme_I
+  - viseme_O
+  - viseme_U
+  - NEUTRAL
+  - A
+  - I
+  - U
+  - E
+  - O
+  - JOY
+  - ANGRY
+  - SORROW
+  - FUN
+  - mouthRotate_L
+  - mouthRotate_R
 parts_categories:
   - Type
   - Eyebrow
@@ -134,6 +192,8 @@ shapekey_categories:
   - Eyebrow
   - Eyes
   - Teeth
+  - MouthProp
+  - Jewelry
 mandatory_head_categories:
   - Type
 mandatory_parts_categories:
@@ -204,3 +264,12 @@ bones:
   - mixamorig:LeftFoot
   - mixamorig:LeftToeBase
   - mixamorig:LeftToe_End
+shapekey_blockers:
+  mouth:
+    category:
+      - Helmet
+    parts:
+      - mp01
+      - mp02
+      - mp05
+      - mp06

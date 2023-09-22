@@ -56,9 +56,7 @@ class GAM_OT_RenameShapekey(bpy.types.Operator):
         modified_obj_cnt = 0
         modified_shapekey_cnt = 0
 
-        for col_expr, _, obj in iterate_category_mesh_objects(
-            constants.parts_categories
-        ):
+        for col_expr, _, obj in iterate_category_mesh_objects(constants.parts_categories):
             sk_report_lines = [
                 f"Shapekey[{d.key}] {d.detail}"
                 for details in remove_prefix_from_shapekeys(obj, prefix).values()
@@ -66,9 +64,7 @@ class GAM_OT_RenameShapekey(bpy.types.Operator):
             ]
 
             if len(sk_report_lines) > 0:
-                logger.log(
-                    f"Shapekey Fixed :: [{col_expr}] {obj.name} ({obj.data.name})"
-                )
+                logger.log(f"Shapekey Fixed :: [{col_expr}] {obj.name} ({obj.data.name})")
                 for line in sk_report_lines:
                     logger.log(line)
                 logger.log("")

@@ -11,6 +11,8 @@ WHL_PACKAGES = ["gltf_formatter", "blender_validator"]
 
 current = os.path.dirname(os.path.realpath(__file__))
 EXTERNAL_LIB_DIR = f"{current}/external_lib"
+for p in [p for p in sys.path if "/external_lib" in p]:
+    sys.path.remove(p)
 sys.path.insert(0, EXTERNAL_LIB_DIR)
 
 

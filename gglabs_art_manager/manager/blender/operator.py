@@ -104,7 +104,9 @@ class GAM_OT_ExportGLB(bpy.types.Operator):
         glb_type: str = accessor.getattr("glb_type")
 
         output_path: str = accessor.getattr_abspath("output_dirpath")
-        current_filename: str = bpy.path.basename(bpy.context.blend_data.filepath).rsplit(".", 1)[0]
+        current_filename: str = bpy.path.basename(
+            bpy.context.blend_data.filepath
+        ).rsplit(".", 1)[0]
         temp_filepath = os.path.join(output_path, f"temp_{current_filename}.{glb_type}")
         glb_filepath = os.path.join(output_path, f"{current_filename}.{glb_type}")
 

@@ -22,7 +22,9 @@ class GAM_PGT_Main(GAM_PGT_Base):
             self.validate_config_loaded_message = str(e)
             self.is_validate_config_loaded = False
         else:
-            self.validate_config_loaded_message = "유효성 검사 설정 파일이 정상적으로 로드되어졌습니다!"
+            self.validate_config_loaded_message = (
+                "유효성 검사 설정 파일이 정상적으로 로드되어졌습니다!"
+            )
             self.is_validate_config_loaded = True
 
             validator = BlenderValidator(
@@ -36,6 +38,7 @@ class GAM_PGT_Main(GAM_PGT_Base):
             for rule in validator.rules:
                 logger.log(f"{rule.name()}: {rule.description_kr}")
 
+    # pylint: disable=reportInvalidTypeForm
     project_type: bpy.props.EnumProperty(
         name="",
         description="작업 프로젝트를 지정합니다.",

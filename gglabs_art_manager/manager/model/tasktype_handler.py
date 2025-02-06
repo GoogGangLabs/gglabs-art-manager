@@ -21,7 +21,6 @@ class GltfOptions:
     export_texcoords: bool
     export_normals: bool
     export_tangents: bool
-    export_colors: bool
     export_attributes: bool
     use_mesh_edges: bool
     use_mesh_vertices: bool
@@ -41,9 +40,12 @@ class GltfOptions:
     # Default Settings
     export_yup: bool = True
     check_existing: bool = False
-    export_keep_originals: bool = True
     use_active_scene: bool = True
     export_extras: bool = True
+
+    # Material
+    export_materials: str = "EXPORT"
+    export_image_format: str = "AUTO"
 
     export_animation_mode: str = "ACTIVE_ACTIONS"
     export_current_frame: bool = False
@@ -68,7 +70,6 @@ _TaskTypeGltfOptions = {
         export_texcoords=True,
         export_normals=True,
         export_tangents=True,
-        export_colors=False,
         export_attributes=True,
         use_mesh_edges=False,
         use_mesh_vertices=False,
@@ -91,7 +92,6 @@ _TaskTypeGltfOptions = {
         export_texcoords=True,
         export_normals=True,
         export_tangents=True,
-        export_colors=False,
         export_attributes=True,
         use_mesh_edges=False,
         use_mesh_vertices=False,

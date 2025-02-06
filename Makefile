@@ -5,7 +5,7 @@ APP=gglabs_art_manager
 BIN=./.venv/bin
 SRC=./$(APP)
 
-PY=python3.10
+PY=python3.11
 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME), Linux)
@@ -73,6 +73,7 @@ build: external-lib
 clean:
 	pushd $(GLTF_FORMATTER_PATH) && make clean && popd
 	rm -rf lib $(APP)/external_lib build
+	find $(SRC) | grep -E "(__pycache__|\.pyc)" | xargs rm -rf;
 
 blender: external-lib
-	PYTHONPATH=$(PWD) $(BLENDER) --python $(SRC)/__init__.py $(SAMPLE)
+	PYTHONPATH=$(PWD) $(BLENDER) --python-use-system-env --python $(SRC)/__init__.py $(SAMPLE)

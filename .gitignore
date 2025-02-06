@@ -1,5 +1,6 @@
 # only for pkgs
 gglabs_art_manager/external_lib
+**/configuration_s3_*.yaml
 
 # Blend files
 **/*.blend

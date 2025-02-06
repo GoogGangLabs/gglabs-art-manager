@@ -1,11 +1,11 @@
-bpy==3.4.0
+bpy==4.3.0
 mathutils==3.3.0
 
 # external dependencies
 pygltflib==1.15.6
 
 # linters
-fake-bpy-module-latest==20230731
+fake-bpy-module-4.3==20250130
 black==22.12.0
 pylint==2.15.9
 isort==5.11.4
@@ -14,15 +14,16 @@ isort==5.11.4
 pytest==7.2.1
 
 # blender
-autopep8==1.6.0
+autopep8==2.3.1
 certifi==2021.10.8
 charset-normalizer==2.0.10
-Cython==0.29.26
+Cython==0.29.30
 idna==3.3
-numpy==1.22.0
-pycodestyle==2.8.0
-requests==2.27.1
+numpy==1.24.3
+pycodestyle==2.12.1
 toml==0.10.2
 urllib3==1.26.8
 zstandard==0.16.0
 
+# Due to confict with boto3
+#requests==2.27.1

@@ -1,12 +1,8 @@
 {
     "git.ignoreLimitWarning": true,
-    "python.formatting.provider": "none",
-    "python.formatting.blackArgs": [
-        "--line-length",
-        "100",
-    ],
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportInvalidTypeForm": "none"
+    },
     "editor.formatOnSave": true,
     "isort.args": [
         "--profile",
@@ -14,7 +10,7 @@
     ],
     "[python]": {
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true
+            "source.organizeImports": "explicit"
         },
         "editor.defaultFormatter": "ms-python.black-formatter"
     },

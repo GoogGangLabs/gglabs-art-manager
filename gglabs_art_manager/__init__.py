@@ -91,12 +91,12 @@ from gglabs_art_manager import manager
 bl_info = {
     "name": "GGLabs_Art_Manager",
     "author": "GGLabs",
-    "version": (4, 6, 0),
-    "blender": (3, 4, 1),
+    "version": (1, 0, 1),  # means nothing
+    "blender": (4, 3, 1),
     "location": "View3D",
     "description": "Manage and export 3D Resources for GGLabs",
     "support": "COMMUNITY",
-    "doc_url": "https://github.com/GoogGangLabs/kikitown_pipeline_manager",
+    "doc_url": "https://github.com/GoogGangLabs/gglabs_art_manager",
     "wiki_url": "",
     "tracker_url": "",
     "category": "Development",

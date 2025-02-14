@@ -85,7 +85,10 @@ class GAM_OT_ExportGLB(bpy.types.Operator):
 
         # TODO: Make this controlled by mode and project
         context = save_bpy_context()
-        control_visibilities_for_tasktype(task_type, constants.shapekey_categories)
+        control_visibilities_for_tasktype(
+            task_type,
+            constants.shapekey_categories + constants.custom_shapekey_categories,
+        )
 
         # 2. Generate custom properties for gltf formatting rules.
         validator = BlenderValidator(
